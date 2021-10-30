@@ -11,7 +11,9 @@ class Dataset:
 
     def __init__(self, name):
         self.types = {'date': np.datetime64,
-                      'integer': np.uint32}
+                      'integer': np.uint32,
+                      'string': str,
+                      'boolean': bool}
         self.client = pymongo.MongoClient("localhost", 27017, maxPoolSize=50)
         self.name = name
         self.db = self.client[self.name]
@@ -33,6 +35,7 @@ class Dataset:
 
 
     def parse(self, data, schema):
+        data = data.fillna(0)
         data = data.astype({item['name']: self.types[item['datatype']] for item in schema['tableSchema']['columns']})
         return data
     
