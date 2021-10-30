@@ -1,4 +1,4 @@
-#/bin/bash
+#!/bin/bash
 
 [[ -d "schemas" ]] || mkdir "schemas"
 [[ -d "data" ]] || mkdir "data"
@@ -6,7 +6,7 @@
 distro=$(gcc --version | grep 'Ubuntu')
 
 
-if [ -z "$distro"]; then
+if [ -z "$distro" ]; then
     yum -y install python3-devel openssl-devel zlib-devel bzip2-devel sqlite-devel libffi-devel python3-pip
 else
     add-apt-repository ppa:deadsnakes/ppa
