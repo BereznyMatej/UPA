@@ -24,11 +24,6 @@
         "name": "okresy",
         "url": "https://onemocneni-aktualne.mzcr.cz/api/v2/covid-19/kraj-okres-nakazeni-vyleceni-umrti.csv",
         "schema_url": "https://onemocneni-aktualne.mzcr.cz/api/v2/covid-19/kraj-okres-nakazeni-vyleceni-umrti.csv-metadata.json"
-        },
-        {
-        "name": "obce",
-        "url": "https://onemocneni-aktualne.mzcr.cz/api/v2/covid-19/obce.csv",
-        "schema_url": "https://onemocneni-aktualne.mzcr.cz/api/v2/covid-19/obce.csv-metadata.json"
         }
     ]
 }

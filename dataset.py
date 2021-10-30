@@ -26,17 +26,17 @@ class Dataset:
     def download_and_insert(self, name, url, schema_url):
 
         print(f"Processing {name}... ", end='')
-        schema_name = f"schemas/{name}.json"
+        schema_name = f"{name}_schema"
+
+        schema = self.get(schema_name)
         
-        if not os.path.isfile(schema_name):
+        if not schema:
             schema = requests.get(schema_url, headers={'user-agent' : ""}).json()
-            self.__save_schema(schema, name)
-        else:
-            with open(f"schemas/{name}.json") as file:
-                schema = json.load(file) 
+            self.__save_schema(schema, schema_name)
         
         data = self.parse(pd.read_csv(url), schema)
         self.insert(data, name)
+        print("Done.")
 
 
     def parse(self, data, schema):
@@ -46,19 +46,22 @@ class Dataset:
     
 
     def __save_schema(self, schema, name):
-        with open(f"schemas/{name}.json", 'w', encoding='utf8') as file:
-            json.dump(schema, file, ensure_ascii=False)
-            file.close()
+        table = self.db[name]
+        table.insert_one(schema)
+
+
+    def get_dataframe(self, name):
+        
+        schema = self.get(f"{name}_json")
+        data = pd.DataFrame(self.get(name))
+        return self.parse(data, schema)
 
 
     def get(self, name):
-
-        with open(f"schemas/{name}.json") as file:
-            schema = json.load(file) 
-
         table = self.db[name]
-        data = pd.DataFrame(iter(table.find()))
-        return self.parse(data, schema)
+        data = list(table.find())
+
+        return data[0] if data else []
 
 
     def insert(self, data, name):
@@ -66,6 +69,3 @@ class Dataset:
         table = self.db[name]
         data.index = data.index.map(str)
         table.insert_many(data.to_dict('records'))
-        print("Done.")
-
-        
