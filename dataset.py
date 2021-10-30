@@ -8,7 +8,6 @@ import os
 
 class Dataset:
 
-
     def __init__(self, name):
         self.types = {'date': np.datetime64,
                       'integer': np.uint32,
@@ -18,9 +17,15 @@ class Dataset:
         self.name = name
         self.db = self.client[self.name]
         
-    
+
+    def clear(self):
+        self.client.drop_database(self.name)
+        self.db = self.client[self.name]
+
+
     def download_and_insert(self, name, url, schema_url):
 
+        print(f"Processing {name}... ", end='')
         schema_name = f"schemas/{name}.json"
         
         if not os.path.isfile(schema_name):
@@ -29,7 +34,7 @@ class Dataset:
         else:
             with open(f"schemas/{name}.json") as file:
                 schema = json.load(file) 
-
+        
         data = self.parse(pd.read_csv(url), schema)
         self.insert(data, name)
 
@@ -52,16 +57,15 @@ class Dataset:
             schema = json.load(file) 
 
         table = self.db[name]
-        data = pd.DataFrame(table.find_one({"index": name})['data'])
+        data = pd.DataFrame(iter(table.find()))
         return self.parse(data, schema)
 
 
     def insert(self, data, name):
         
         table = self.db[name]
-        data = data.astype(str)
         data.index = data.index.map(str)
-        data_dict = data.to_dict()
-        table.insert_one({"index": name, "data": data.to_dict()})
+        table.insert_many(data.to_dict('records'))
+        print("Done.")
 
         
