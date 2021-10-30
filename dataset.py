@@ -13,7 +13,7 @@ class Dataset:
                       'integer': np.uint32,
                       'string': str,
                       'boolean': bool}
-        self.client = pymongo.MongoClient("localhost", 27017, maxPoolSize=50)
+        self.client = pymongo.MongoClient('mongodb+srv://Admin:klat8klat@upa.85xuv.mongodb.net/UPA?retryWrites=true&w=majority', 27017, maxPoolSize=50)
         self.name = name
         self.db = self.client[self.name]
         
