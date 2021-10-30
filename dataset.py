@@ -57,7 +57,7 @@ class Dataset:
             schema = json.load(file) 
 
         table = self.db[name]
-        data = pd.DataFrame(table.find_one({"index": name})['data'])
+        data = pd.DataFrame(iter(table.find()))
         return self.parse(data, schema)
 
 

@@ -12,3 +12,4 @@ dataset.clear()
 for item in datasets['sources']:
     dataset.download_and_insert(**item)
 
+print(dataset.get('okresy'))
