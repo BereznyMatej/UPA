@@ -51,14 +51,14 @@ class Dataset:
         with open(f"schemas/{name}.json") as file:
             schema = json.load(file) 
 
-        table = self.db['Covid']
+        table = self.db[name]
         data = pd.DataFrame(table.find_one({"index": name})['data'])
         return self.parse(data, schema)
 
 
     def insert(self, data, name):
         
-        table = self.db['Covid']
+        table = self.db[name]
         data = data.astype(str)
         data.index = data.index.map(str)
         data_dict = data.to_dict()
