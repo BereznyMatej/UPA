@@ -1,0 +1,9 @@
+{
+    "sources": [
+        {
+        "name": "random_name",
+        "url": "https://onemocneni-aktualne.mzcr.cz/api/v2/covid-19/nakazeni-vyleceni-umrti-testy.csv",
+        "schema_url": "https://onemocneni-aktualne.mzcr.cz/api/v2/covid-19/nakazeni-vyleceni-umrti-testy.csv-metadata.json"
+        }
+    ]
+}
