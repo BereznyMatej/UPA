@@ -1,9 +1,34 @@
 {
     "sources": [
         {
-        "name": "random_name",
-        "url": "https://onemocneni-aktualne.mzcr.cz/api/v2/covid-19/nakazeni-vyleceni-umrti-testy.csv",
-        "schema_url": "https://onemocneni-aktualne.mzcr.cz/api/v2/covid-19/nakazeni-vyleceni-umrti-testy.csv-metadata.json"
+        "name": "nakazeny_kraj",
+        "url": "https://onemocneni-aktualne.mzcr.cz/api/v2/covid-19/osoby.csv",
+        "schema_url": "https://onemocneni-aktualne.mzcr.cz/api/v2/covid-19/osoby.csv-metadata.json"
+        },
+        {
+        "name": "vylieceny_kraj",
+        "url": "https://onemocneni-aktualne.mzcr.cz/api/v2/covid-19/vyleceni.csv",
+        "schema_url": "https://onemocneni-aktualne.mzcr.cz/api/v2/covid-19/vyleceni.csv-metadata.json"
+        },
+        {
+        "name": "umrtia_kraj",
+        "url": "https://onemocneni-aktualne.mzcr.cz/api/v2/covid-19/umrti.csv",
+        "schema_url": "https://onemocneni-aktualne.mzcr.cz/api/v2/covid-19/umrti.csv-metadata.json"
+        },
+        {
+        "name": "hospitalizovany",
+        "url": "https://onemocneni-aktualne.mzcr.cz/api/v2/covid-19/hospitalizace.csv",
+        "schema_url": "https://onemocneni-aktualne.mzcr.cz/api/v2/covid-19/hospitalizace.csv-metadata.json"
+        },
+        {
+        "name": "okresy",
+        "url": "https://onemocneni-aktualne.mzcr.cz/api/v2/covid-19/kraj-okres-nakazeni-vyleceni-umrti.csv",
+        "schema_url": "https://onemocneni-aktualne.mzcr.cz/api/v2/covid-19/kraj-okres-nakazeni-vyleceni-umrti.csv-metadata.json"
+        },
+        {
+        "name": "obce",
+        "url": "https://onemocneni-aktualne.mzcr.cz/api/v2/covid-19/obce.csv",
+        "schema_url": "https://onemocneni-aktualne.mzcr.cz/api/v2/covid-19/obce.csv-metadata.json"
         }
     ]
 }
