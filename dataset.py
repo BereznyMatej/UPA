@@ -5,11 +5,8 @@ import requests
 import pymongo
 import os
 
-CHUNK_SIZE = 16000000
-
 
 class Dataset:
-
 
     def __init__(self, name):
         self.types = {'date': np.datetime64,
@@ -20,9 +17,15 @@ class Dataset:
         self.name = name
         self.db = self.client[self.name]
         
-    
+
+    def clear(self):
+        self.client.drop_database(self.name)
+        self.db = self.client[self.name]
+
+
     def download_and_insert(self, name, url, schema_url):
 
+        print(f"Processing {name}... ", end='')
         schema_name = f"schemas/{name}.json"
         
         if not os.path.isfile(schema_name):
@@ -31,7 +34,7 @@ class Dataset:
         else:
             with open(f"schemas/{name}.json") as file:
                 schema = json.load(file) 
-
+        
         data = self.parse(pd.read_csv(url), schema)
         self.insert(data, name)
 
@@ -60,22 +63,9 @@ class Dataset:
 
     def insert(self, data, name):
         
-        global CHUNK_SIZE
-        print(data.memory_usage(index=True).sum())
-
-        if data.memory_usage(index=True).sum() > CHUNK_SIZE:
-            chunks = np.array_split(data, data.memory_usage(index=True).sum() // CHUNK_SIZE + 1)
-            print(len(chunks))
-            for chunk in chunks:
-                print(chunk.memory_usage(index=True).sum())
-                table = self.db[name]
-                chunk = chunk.astype(str)
-                chunk.index = chunk.index.map(str)
-                table.insert_one({"index": name, "data": chunk.to_dict()})
-        else:
-            table = self.db[name]
-            data = data.astype(str)
-            data.index = data.index.map(str)
-            table.insert_one({"index": name, "data": data.to_dict()})
+        table = self.db[name]
+        data.index = data.index.map(str)
+        table.insert_many(data.to_dict('records'))
+        print("Done.")
 
         

@@ -7,9 +7,8 @@ with open('datasets.json') as file:
 
 
 dataset = Dataset(name='proj_db')
-
+dataset.clear()
 
 for item in datasets['sources']:
     dataset.download_and_insert(**item)
-
 
