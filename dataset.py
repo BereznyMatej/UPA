@@ -5,6 +5,8 @@ import requests
 import pymongo
 import os
 
+CHUNK_SIZE = 16000000
+
 
 class Dataset:
 
@@ -58,10 +60,22 @@ class Dataset:
 
     def insert(self, data, name):
         
-        table = self.db[name]
-        data = data.astype(str)
-        data.index = data.index.map(str)
-        data_dict = data.to_dict()
-        table.insert_one({"index": name, "data": data.to_dict()})
+        global CHUNK_SIZE
+        print(data.memory_usage(index=True).sum())
+
+        if data.memory_usage(index=True).sum() > CHUNK_SIZE:
+            chunks = np.array_split(data, data.memory_usage(index=True).sum() // CHUNK_SIZE + 1)
+            print(len(chunks))
+            for chunk in chunks:
+                print(chunk.memory_usage(index=True).sum())
+                table = self.db[name]
+                chunk = chunk.astype(str)
+                chunk.index = chunk.index.map(str)
+                table.insert_one({"index": name, "data": chunk.to_dict()})
+        else:
+            table = self.db[name]
+            data = data.astype(str)
+            data.index = data.index.map(str)
+            table.insert_one({"index": name, "data": data.to_dict()})
 
         
