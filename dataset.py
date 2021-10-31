@@ -18,14 +18,18 @@ class Dataset:
         self.db = self.client[self.name]
         
 
-    def clear(self):
-        self.client.drop_database(self.name)
-        self.db = self.client[self.name]
+    def clear(self, collection_name=None):
+        
+        if collection_name is not None:
+            self.db[collection_name].drop()
+        else:
+            self.client.drop_database(self.name)
+            self.db = self.client[self.name]
 
 
     def download_and_insert(self, name, url, schema_url):
-
-        print(f"Processing {name}... ", end='')
+        
+        print(f"Processing {name}... ", end=' ')
         schema_name = f"{name}_schema"
 
         schema = self.get(schema_name)
@@ -33,8 +37,11 @@ class Dataset:
         if not schema:
             schema = requests.get(schema_url, headers={'user-agent' : ""}).json()
             self.__save_schema(schema, schema_name)
-        
+        else:
+            schema = schema['data']
+
         data = self.parse(pd.read_csv(url), schema)
+
         self.insert(data, name)
         print("Done.")
 
@@ -52,16 +59,16 @@ class Dataset:
 
     def get_dataframe(self, name):
         
-        schema = self.get(f"{name}_json")
-        data = pd.DataFrame(self.get(name))
+        schema = self.get(f"{name}_schema")['data']
+        data = pd.DataFrame(iter(self.get(name)))
         return self.parse(data, schema)
 
 
     def get(self, name):
-        table = self.db[name]
-        data = list(table.find())
 
-        return data[0] if data else []
+        table = self.db[name]
+        data = table.find_one() if 'schema' in name else table.find()
+        return data
 
 
     def insert(self, data, name):
