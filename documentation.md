@@ -91,5 +91,17 @@ Dátová sada podľa krajov a okresov ČR obsahujúca kumulatívne denné počty
 
 ## Implementácia riešenia
 ### dataset.py
+Obsahuje potrebné funkcie pre prácu k dátovým sadám a dátami ako napríklad stiahnutie dát a ich následné vkladanie do databázy, parsovanie dát, alebo ich mazanie.
 ### download.py
+Pracuje s funkciami v *dataset.py* a interaguje s databázou. Príklad na spustenie:
+**python3 download.py**
+rgumenty:
+    **-u**, **--update** Aktualizuje zadanú kolekciu v db. Na aktualizáciu každej kolekcie použite „všetky“.
+	**-d**, **--download** Vymaže databázu a stiahne množiny údajov uložené v súbore datasets.json
+	**-c**, **--clear** Vymaže databázu
+	**-s**, **--fetch** Načíta zadanú kolekciu z db
+
 ### setup.sh
+Skript na stiahnutie potrebných knižníc a závislostí pre fungovanie riešenia
+### datasets.json
+Obsahuje potrebné linky na stiahnutie dátových sád.
