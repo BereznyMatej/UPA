@@ -13,30 +13,37 @@ class Dataset:
                       'integer': np.uint32,
                       'string': str,
                       'boolean': bool}
-        self.client = pymongo.MongoClient("localhost", 27017, maxPoolSize=50)
+        self.client = pymongo.MongoClient('mongodb+srv://Admin:klat8klat@upa.85xuv.mongodb.net/UPA?retryWrites=true&w=majority', 27017, maxPoolSize=50)
         self.name = name
         self.db = self.client[self.name]
         
 
-    def clear(self):
-        self.client.drop_database(self.name)
-        self.db = self.client[self.name]
+    def clear(self, collection_name=None):
+        
+        if collection_name is not None:
+            self.db[collection_name].drop()
+        else:
+            self.client.drop_database(self.name)
+            self.db = self.client[self.name]
 
 
     def download_and_insert(self, name, url, schema_url):
+        
+        print(f"Processing {name}... ", end=' ')
+        schema_name = f"{name}_schema"
 
-        print(f"Processing {name}... ", end='')
-        schema_name = f"schemas/{name}.json"
+        schema = self.get(schema_name)
         
-        if not os.path.isfile(schema_name):
+        if not schema:
             schema = requests.get(schema_url, headers={'user-agent' : ""}).json()
-            self.__save_schema(schema, name)
+            self.__save_schema(schema, schema_name)
         else:
-            with open(f"schemas/{name}.json") as file:
-                schema = json.load(file) 
-        
+            schema = schema['data']
+
         data = self.parse(pd.read_csv(url), schema)
+
         self.insert(data, name)
+        print("Done.")
 
 
     def parse(self, data, schema):
@@ -46,19 +53,22 @@ class Dataset:
     
 
     def __save_schema(self, schema, name):
-        with open(f"schemas/{name}.json", 'w', encoding='utf8') as file:
-            json.dump(schema, file, ensure_ascii=False)
-            file.close()
+        table = self.db[name]
+        table.insert_one(schema)
+
+
+    def get_dataframe(self, name):
+        
+        schema = self.get(f"{name}_schema")['data']
+        data = pd.DataFrame(iter(self.get(name)))
+        return self.parse(data, schema)
 
 
     def get(self, name):
 
-        with open(f"schemas/{name}.json") as file:
-            schema = json.load(file) 
-
         table = self.db[name]
-        data = pd.DataFrame(iter(table.find()))
-        return self.parse(data, schema)
+        data = table.find_one() if 'schema' in name else table.find()
+        return data
 
 
     def insert(self, data, name):
@@ -66,6 +76,3 @@ class Dataset:
         table = self.db[name]
         data.index = data.index.map(str)
         table.insert_many(data.to_dict('records'))
-        print("Done.")
-
-        
