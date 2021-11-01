@@ -2,6 +2,7 @@
 # Dokumantácia
 
 Autory: Matej Berezný, Ondrej Valo, Švenk Adam
+
 Login: xberez03, xvaloo00, xsvenk00
 
 ## Popis dátových sád
