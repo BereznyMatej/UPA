@@ -6,6 +6,10 @@ Autory: Matej Berezný, Ondrej Valo, Švenk Adam
 Login: xberez03, xvaloo00, xsvenk00
 
 ## Popis dátových sád
+Dáta sú čítané z neskôr uvedených zdrojov a ukladané pomocou MongoDB na zadarmo hosťovaný klaster, kde sú údaje uložené v dokumentoch BSON (binárny JSON) s dynamickou schémou. 
+Dátové sady boli získane z:
+https://onemocneni-aktualne.mzcr.cz/api/v2/covid-19
+https://data.gov.cz/datov%C3%A9-sady?dotaz=covid-19
 ### COVID-19: Prehľad osôb s potvrdenou nákazou podľa hlásenia krajských hygienických staníc
 **Popis:**
 Dátová sada obsahujúca na základe denní incidenčný prehľad osôb s preukázanou nákazou COVID-19 podľa hlásenia krajských hygienických staníc.
