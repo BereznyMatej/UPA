@@ -55,35 +55,35 @@ Dátová sada obsahujúca dáta hospitalizovaných pacientov popisujúca priebeh
 | stĺpec | dátový typ | význam |
 |--|--|--|
 | datum: | date | dátum dňa potvrdenia vyliečenia ochorenia  |
-| pacient_prvni_zaznam: | integer |  |
-| kum_pacient_prvni_zaznam: | integer |  |
-| pocet_hosp: | integer |  |
-| stav_bez_priznaku: | integer |  |
-| stav_lehky: | integer |  |
-| stav_stredni: | integer |  |
-| stav_tezky: | integer |  |
-| jip: | integer |  |
-| kyslik: | integer |  |
-| hfno: | integer |  |
-| upv: | integer |  |
-| ecmo: | integer |  |
-| tezky_upv_ecmo: | integer |  |
-| umrti: | integer |  |
-| kum_umrti: | integer |  |
+| pacient_prvni_zaznam: | integer | prvý krát hospitalizovaný |
+| kum_pacient_prvni_zaznam: | integer | kumulatívny počet prvý krát hospitalizovaných |
+| pocet_hosp: | integer | celkový počet hospitalizovaných |
+| stav_bez_priznaku: | integer | hospitalizovaný bez príznakov |
+| stav_lehky: | integer | hospitalizovaný s ľahkými príznakmi |
+| stav_stredni: | integer | hospitalizovaný s strednými príznakmi |
+| stav_tezky: | integer | hospitalizovaný s závažnými príznakmi |
+| jip: | integer | hospitalizovaný na jednote intenzívneho opatrenia |
+| kyslik: | integer | hospitalizovaný na lôžkach vybavených zdrojom kyslíka |
+| hfno: | integer | hospitalizovaný na lôžku s oxygenátorom(High-Flow Nasal Oxygen) |
+| upv: | integer | umelá pľúcna ventilácia |
+| ecmo: | integer | mimotelový obeh pre náhradu funkcie pľúc |
+| tezky_upv_ecmo: | integer | ťažký prípad z nasadením ecmo a upv |
+| umrti: | integer | počet úmrtí hospitalizovaných |
+| kum_umrti: | integer |kumulatívny počet počet úmrtí hospitalizovaných |
 
-### COVID-19: Prehľad úmrtí podľa hlásenia krajských hygienických staníc
+### COVID-19: Prehľad epidemiologickej situácie podľa hlásenia krajských hygienických staníc podľa okresu
 **Popis:**
 Dátová sada podľa krajov a okresov ČR obsahujúca kumulatívne denné počty osôb s preukázaným ochorením COVID-19 podľa validovaných hlásení krajských hygienických staníc, kumulatívne denné počty vyliečených po ochorení COVID-19 podľa hlásenia krajských hygienických staníc a kumulatívne denné počty úmrtí v súvislosti s ochorením COVID 19 podľa hlásenia krajských hygienických staníc a hospitalizačných úmrtí.
 
 **Schéma:**
 | stĺpec | dátový typ | význam |
 |--|--|--|
-| datum: | date | dátum dňa potvrdenia úmrtia  |
+| datum: | date | dátum dňa údajov |
 | kraj_nuts_kod: | string | kód kraja bydliska osoby |
 | okres_lau_kod: | string | kód okresu bydliska osoby |
-| kumulativni_pocet_nakazenych: | integer |  |
-| kumulativni_pocet_vylecenych: | integer |  |
-| kumulativni_pocet_umrti: | integer |  |
+| kumulativni_pocet_nakazenych: | integer | kumulatívny počet nakazených v okrese |
+| kumulativni_pocet_vylecenych: | integer | kumulatívny počet vyliečených v okrese |
+| kumulativni_pocet_umrti: | integer | kumulatívny počet úmrtí v okrese |
 
 ## Implementácia riešenia
 ### dataset.py
