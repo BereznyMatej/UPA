@@ -6,7 +6,7 @@ distro=$(cat /etc/os-release | grep 'Ubuntu')
 
 
 if [ -z "$distro" ]; then
-    dnf -y install python3-devel openssl-devel zlib-devel bzip2-devel sqlite-devel libffi-devel python3-pip
+    yum -y install python3-devel openssl-devel zlib-devel bzip2-devel sqlite-devel libffi-devel python3-pip
 else
     add-apt-repository ppa:deadsnakes/ppa
     apt update
