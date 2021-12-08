@@ -2,9 +2,9 @@ import pandas as pd
 import numpy as np
 import json
 import requests
-import pymongo
 import os
 
+from ssh_pymongo import MongoSession
 
 class Dataset:
 
@@ -18,10 +18,26 @@ class Dataset:
                       'integer': np.uint32,
                       'string': str,
                       'boolean': bool}
-        self.client = pymongo.MongoClient('mongodb+srv://Admin:klat8klat@upa.85xuv.mongodb.net/UPA?retryWrites=true&w=majority', 27017, maxPoolSize=50)
+        self.session = MongoSession(host='ec2-13-40-24-161.eu-west-2.compute.amazonaws.com',
+                                    user='ubuntu',
+                                    key='UPA-projekt.pem')
+        self.client = self.session.connection
         self.name = name
         self.db = self.client[self.name]
-        
+        self.region_mapper = {'CZ010': 'Praha',
+                              'CZ020': 'Stredocesky kraj',
+                              'CZ031': 'Jihocesky kraj',
+                              'CZ032': 'Plzensky kraj',
+                              'CZ041': 'Karlovarsky kraj',
+                              'CZ042': 'Ustecky kraj',
+                              'CZ051': 'Liberecky kraj',
+                              'CZ052': 'Kralovohradecky kraj',
+                              'CZ053': 'Pardubicky kraj',
+                              'CZ063': 'Kraj Vysocina',
+                              'CZ064': 'Jihomoravsky kraj',
+                              'CZ071': 'Olomoucky kraj',
+                              'CZ072': 'Zlinsky kraj',
+                              'CZ080': 'Moravskoslezsky kraj'}
 
     def clear(self, collection_name=None):
         """Clears one collection from remote db if collection_name is specified, otherwise wipes the entire database. 
@@ -75,6 +91,10 @@ class Dataset:
         """
         data = data.fillna(0)
         data = data.astype({item['name']: self.types[item['datatype']] for item in schema['tableSchema']['columns']})
+        
+        if 'kraj_nuts_kod' in data:
+            data = data.replace({'kraj_nuts_kod': self.region_mapper}).rename({'kraj_nuts_kod': 'Kraj'}, axis='columns')
+
         return data
     
 

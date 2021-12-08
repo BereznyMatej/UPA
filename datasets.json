@@ -6,9 +6,9 @@
         "schema_url": "https://onemocneni-aktualne.mzcr.cz/api/v2/covid-19/osoby.csv-metadata.json"
         },
         {
-        "name": "vylieceny_kraj",
-        "url": "https://onemocneni-aktualne.mzcr.cz/api/v2/covid-19/vyleceni.csv",
-        "schema_url": "https://onemocneni-aktualne.mzcr.cz/api/v2/covid-19/vyleceni.csv-metadata.json"
+        "name": "statistika_celkovo",
+        "url": "https://onemocneni-aktualne.mzcr.cz/api/v2/covid-19/nakazeni-vyleceni-umrti-testy.csv",
+        "schema_url": "https://onemocneni-aktualne.mzcr.cz/api/v2/covid-19/nakazeni-vyleceni-umrti-testy.csv-metadata.json"
         },
         {
         "name": "umrtia_kraj",
