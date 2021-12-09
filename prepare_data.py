@@ -10,7 +10,7 @@ def parse_args():
     return parser.parse_args()
     
 
-class Query:
+class QueryParser:
 
     def __init__(self, dataset) -> None:
         self.dataset = dataset
@@ -194,7 +194,7 @@ if __name__ == "__main__":
     
 
     dataset = Dataset(name='proj_db')
-    queries = Query(dataset=dataset)
+    queries = QueryParser(dataset=dataset)
 
     args = parse_args()
 
