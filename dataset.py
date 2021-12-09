@@ -2,7 +2,6 @@ import pandas as pd
 import numpy as np
 import json
 import requests
-import os
 
 from ssh_pymongo import MongoSession
 
@@ -16,6 +15,7 @@ class Dataset:
         """
         self.types = {'date': np.datetime64,
                       'integer': np.uint32,
+                      'number': np.uint32,
                       'string': str,
                       'boolean': bool}
         self.session = MongoSession(host='ec2-13-40-24-161.eu-west-2.compute.amazonaws.com',
@@ -24,20 +24,20 @@ class Dataset:
         self.client = self.session.connection
         self.name = name
         self.db = self.client[self.name]
-        self.region_mapper = {'CZ010': 'Praha',
-                              'CZ020': 'Stredocesky kraj',
-                              'CZ031': 'Jihocesky kraj',
-                              'CZ032': 'Plzensky kraj',
-                              'CZ041': 'Karlovarsky kraj',
-                              'CZ042': 'Ustecky kraj',
-                              'CZ051': 'Liberecky kraj',
-                              'CZ052': 'Kralovohradecky kraj',
-                              'CZ053': 'Pardubicky kraj',
-                              'CZ063': 'Kraj Vysocina',
-                              'CZ064': 'Jihomoravsky kraj',
-                              'CZ071': 'Olomoucky kraj',
-                              'CZ072': 'Zlinsky kraj',
-                              'CZ080': 'Moravskoslezsky kraj'}
+        self.region_mapper = {'CZ010': 'Hlavní město Praha',
+                              'CZ020': 'Středočeský kraj',
+                              'CZ031': 'Jihočeský kraj',
+                              'CZ032': 'Plzeňský kraj',
+                              'CZ041': 'Karlovarský kraj',
+                              'CZ042': 'Ústecký kraj',
+                              'CZ051': 'Liberecký kraj',
+                              'CZ052': 'Královéhradecký kraj',
+                              'CZ053': 'Pardubický kraj',
+                              'CZ063': 'Kraj Vysočina',
+                              'CZ064': 'Jihomoravský kraj',
+                              'CZ071': 'Olomoucký kraj',
+                              'CZ072': 'Zlínský kraj',
+                              'CZ080': 'Moravskoslezský kraj'}
 
     def clear(self, collection_name=None):
         """Clears one collection from remote db if collection_name is specified, otherwise wipes the entire database. 
@@ -67,10 +67,11 @@ class Dataset:
         schema = self.get(schema_name)
         
         if not schema:
-            schema = requests.get(schema_url, headers={'user-agent' : ""}).json()
+            schema = requests.get(schema_url, headers={'user-agent' : ""}).content.decode('utf-8-sig')
+            schema = json.loads(schema)['tableSchema']
             self.__save_schema(schema, schema_name)
         else:
-            schema = schema['data']
+            schema = schema
 
         data = self.parse(pd.read_csv(url), schema)
 
@@ -90,10 +91,15 @@ class Dataset:
             pd.DataFrame: processed dataframe with correct datatypes
         """
         data = data.fillna(0)
-        data = data.astype({item['name']: self.types[item['datatype']] for item in schema['tableSchema']['columns']})
+        data = data.astype({item['name']: self.types[item['datatype']] for item in schema['columns']})
         
         if 'kraj_nuts_kod' in data:
-            data = data.replace({'kraj_nuts_kod': self.region_mapper}).rename({'kraj_nuts_kod': 'Kraj'}, axis='columns')
+            data = data.replace({'kraj_nuts_kod': self.region_mapper})
+
+        if 'datum' in data:
+            data['datum'] = pd.to_datetime(data['datum'])
+        elif 'casref_do' in data:
+            data['casref_do'] = pd.to_datetime(data['casref_do'])
 
         return data
     
@@ -118,7 +124,7 @@ class Dataset:
         Returns:
             pd.DataFrame: processed dataframe with correct datatypes
         """
-        schema = self.get(f"{name}_schema")['data']
+        schema = self.get(f"{name}_schema")
         data = pd.DataFrame(iter(self.get(name)))
         return self.parse(data, schema)
 
@@ -147,3 +153,7 @@ class Dataset:
         table = self.db[name]
         data.index = data.index.map(str)
         table.insert_many(data.to_dict('records'))
+
+
+    def __del__(self):
+        self.session.stop()
