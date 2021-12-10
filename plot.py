@@ -49,7 +49,7 @@ class QueryPlotter:
         fig, ax = plt.subplots(figsize=(20, 10))
 
         df = self.__load_csv(name)[0]
-        sns.boxplot(data=df, x='Kraj', y='Vek', ax=ax)
+        sns.boxplot(data=df, x='Region', y='Age', ax=ax)
         
         ax.tick_params(axis='x', rotation=45)  
         fig.suptitle('Age distribution of covid-19 positive patients by region', fontsize=18)

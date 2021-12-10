@@ -48,7 +48,7 @@ class QueryParser:
        
         df = self.loaded_dfs['nakazeny_kraj'].copy()
         df = df[['vek', 'kraj_nuts_kod']].rename({'vek': 'Age', 'kraj_nuts_kod': 'Region'}, axis='columns')
-        df = df[df['Kraj'] != '0']
+        df = df[df['Region'] != '0']
 
         if export:
             self.__export_to_csv(df, name)
@@ -64,7 +64,9 @@ class QueryParser:
         df1 = self.loaded_dfs['hospitalizovany'].copy()
         df1 = df1.groupby(pd.Grouper(key='datum', freq='M')).sum()[['pacient_prvni_zaznam']]
 
-        df2 = self.loaded_dfs['statistika_celkovo'].copy()
+        df2 = self.loaded_dfs['statistika_celkovo'].copy().reset_index().rename({'_id': 'datum'},
+                                                                                axis='columns')
+        df2['datum'] = pd.to_datetime(df2['datum'])
         df2 = df2.groupby(pd.Grouper(key='datum', freq='M')).sum()[['prirustkovy_pocet_nakazenych',
                                                                     'prirustkovy_pocet_vylecenych',
                                                                     'prirustkovy_pocet_provedenych_testu']]
@@ -124,7 +126,7 @@ class QueryParser:
                         'ockovanie_kraj', 'obyvatelia']
         self.__load_dfs(df_name_list)
         
-        df1 = self.loaded_dfs['obyvatelia']
+        df1 = self.loaded_dfs['obyvatelia'].copy()
         last_year_total = pd.to_datetime(df1['casref_do'].unique()).year[-1]
         df1 = df1[(df1['vuzemi_cis'] == '100') & \
                   (df1['vek_cis'] == '0.0') & \
@@ -132,7 +134,8 @@ class QueryParser:
                   (df1['casref_do'].dt.year.eq(last_year_total))]
         ppl = df1.sum()['hodnota']
 
-        df2 = self.loaded_dfs['ockovanie_kraj']
+        df2 = self.loaded_dfs['ockovanie_kraj'].copy()
+        df2['datum'] = pd.to_datetime(df2['datum'])
         df2 = df2.groupby(pd.Grouper(key='datum', freq='M')).sum()[-months:]
         vaccines = df2.druhych_davek / ppl
         vaccines = vaccines.reset_index().rename({'datum': 'Date', 'druhych_davek': 'Vaccinated %'},
@@ -147,7 +150,7 @@ class QueryParser:
         df_unvaxxed_list = []
 
         for idx, column_name in enumerate(name_list):
-            df = self.loaded_dfs[f'{column_name}_ockovanie']
+            df = self.loaded_dfs[f'{column_name}_ockovanie'].copy()
             c_name_vaxxed = f'{column_name}_dokoncene_ockovani'
             c_name_unvaxxed = f'{column_name}_bez_ockovani'
             c_name_total = f'{column_name}_celkem'
@@ -188,15 +191,18 @@ class QueryParser:
         df_name_list = ['hospitalizovany', 'statistika_celkovo']
         self.__load_dfs(df_name_list)
         
-        df_list = []
-        for df_name in df_name_list:
-            df = self.loaded_dfs[df_name]
-            df = df.groupby(pd.Grouper(key="datum", freq="M")).sum()
-            df_list.append(df)
+   
+        df1 = self.loaded_dfs['hospitalizovany'].copy()
+        df1 = df1.groupby(pd.Grouper(key="datum", freq="M")).sum()
+
+        df2 = self.loaded_dfs['statistika_celkovo'].copy().reset_index().rename({'_id': 'datum'},
+                                                                                axis='columns')
+        df2['datum'] = pd.to_datetime(df2['datum'])
+        df2 = df2.groupby(pd.Grouper(key="datum", freq="M")).sum()
         
-        df = pd.concat(df_list, axis='columns')[['jip', 'kyslik', 'upv', 
-                                                 'ecmo', 'tezky_upv_ecmo',
-                                                 'prirustkovy_pocet_nakazenych']].reset_index()
+        df = pd.concat([df1, df2], axis='columns')[['jip', 'kyslik', 'upv', 
+                                                    'ecmo', 'tezky_upv_ecmo',
+                                                    'prirustkovy_pocet_nakazenych']].reset_index()
         df = df.rename({'datum': 'Date',
                         'prirustkovy_pocet_nakazenych': 'New cases',
                         'jip': 'Intensive care unit',
