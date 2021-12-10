@@ -153,7 +153,3 @@ class Dataset:
         table = self.db[name]
         data.index = data.index.map(str)
         table.insert_many(data.to_dict('records'))
-
-
-    def __del__(self):
-        self.session.stop()
