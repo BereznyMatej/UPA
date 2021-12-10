@@ -1,4 +1,5 @@
 from typing import List
+from matplotlib.pyplot import axes
 import pandas as pd
 import argparse
 
@@ -46,7 +47,8 @@ class QueryParser:
         self.__load_dfs(df_name_list)
        
         df = self.loaded_dfs['nakazeny_kraj'].copy()
-        df = df[['vek', 'kraj_nuts_kod']].rename({'vek': 'Vek', 'kraj_nuts_kod': 'Kraj'}, axis='columns')
+        df = df[['vek', 'kraj_nuts_kod']].rename({'vek': 'Age', 'kraj_nuts_kod': 'Region'}, axis='columns')
+        df = df[df['Kraj'] != '0']
 
         if export:
             self.__export_to_csv(df, name)
@@ -67,7 +69,13 @@ class QueryParser:
                                                                     'prirustkovy_pocet_vylecenych',
                                                                     'prirustkovy_pocet_provedenych_testu']]
         df = pd.concat([df1, df2], axis='columns').reset_index()
-        df = df.melt('datum', var_name='cols', value_name='vals')
+        df = df.rename({'datum': 'Date', 
+                        'prirustkovy_pocet_nakazenych': 'Positive',
+                        'prirustkovy_pocet_vylecenych': 'Recovered',
+                        'prirustkovy_pocet_provedenych_testu': 'Tests',
+                        'pacient_prvni_zaznam': 'Hospitalized'},
+                       axis='columns')
+        df = df.melt('Date', var_name='Category', value_name='Count')
         
         if export:
             self.__export_to_csv(df, name)
@@ -90,13 +98,13 @@ class QueryParser:
         
         df2 = self.loaded_dfs['nakazeny_kraj'].copy()
         df2 = df2.groupby([pd.Grouper(key='datum', freq='3M'), 
-                           'kraj_nuts_kod']).size().reset_index(name='infected_per_month')
-        df2 = df2[df2['kraj_nuts_kod'] != '0'].set_index('kraj_nuts_kod')
-
+                           'kraj_nuts_kod']).size().reset_index(name='infected_per_month').reset_index()
+        df2 = df2.rename({'kraj_nuts_kod': 'Region', 'datum': 'Date'}, axis='columns')
+        df2 = df2[df2['Region'] != '0'].set_index('Region')
         df_list = []
 
-        for date in df2.datum.unique():
-            df = df2[df2.datum == date]
+        for date in df2.Date.unique():
+            df = df2[df2.Date == date]
             df['total_people'] = df1.hodnota
             df['metric'] = df.infected_per_month / df.total_people
             df = df.sort_values(['metric'], ascending=False)
@@ -127,16 +135,18 @@ class QueryParser:
         df2 = self.loaded_dfs['ockovanie_kraj']
         df2 = df2.groupby(pd.Grouper(key='datum', freq='M')).sum()[-months:]
         vaccines = df2.druhych_davek / ppl
-        vaccines = vaccines.reset_index()
+        vaccines = vaccines.reset_index().rename({'datum': 'Date', 'druhych_davek': 'Vaccinated %'},
+                                                  axis='columns')
         for i in range(1, len(vaccines)): 
-            vaccines.loc[i, 'druhych_davek'] += vaccines.loc[i-1, 'druhych_davek']
+            vaccines.loc[i, 'Vaccinated %'] += vaccines.loc[i-1, 'Vaccinated %']
 
 
         name_list = ['jip', 'zemreli', 'hospitalizovani']
+        eng_name_lsit = ['ICU', 'Deaths', 'Hospitalized']
         df_vaxxed_list = []
         df_unvaxxed_list = []
 
-        for column_name in name_list:
+        for idx, column_name in enumerate(name_list):
             df = self.loaded_dfs[f'{column_name}_ockovanie']
             c_name_vaxxed = f'{column_name}_dokoncene_ockovani'
             c_name_unvaxxed = f'{column_name}_bez_ockovani'
@@ -149,18 +159,23 @@ class QueryParser:
             df_vaxxed[c_name_vaxxed] /= df_total[c_name_total]
             df_unvaxxed[c_name_unvaxxed] /= df_total[c_name_total]
 
+            df_vaxxed = df_vaxxed.rename({c_name_vaxxed: f'{eng_name_lsit[idx]} - Vaccinated'}, axis='columns')
+            df_unvaxxed = df_unvaxxed.rename({c_name_unvaxxed: f'{eng_name_lsit[idx]} - Unvaccinated'}, axis='columns')
+
             df_vaxxed_list.append(df_vaxxed)
             df_unvaxxed_list.append(df_unvaxxed)
 
-        vaxxed = pd.concat(df_vaxxed_list, axis='columns').reset_index().melt('datum',
-                                                                              var_name='Typ',
-                                                                              value_name='Percent')
-        unvaxxed = pd.concat(df_vaxxed_list,axis='columns').reset_index().melt('datum',
-                                                                               var_name='Typ',
-                                                                               value_name='Percent')
-
-
-        df_list = [vaxxed, unvaxxed, df2]
+        vaxxed = pd.concat(df_vaxxed_list,
+                           axis='columns').reset_index().rename({'datum': 'Date'},
+                                                                axis='columns').melt('Date',
+                                                                                     var_name='Category',
+                                                                                     value_name='Percent')
+        unvaxxed = pd.concat(df_unvaxxed_list,
+                             axis='columns').reset_index().rename({'datum': 'Date'},
+                                                                  axis='columns').melt('Date',
+                                                                                       var_name='Category',
+                                                                                       value_name='Percent')
+        df_list = [vaxxed, unvaxxed, vaccines]
 
         if export:
             for idx, df in enumerate(df_list): self.__export_to_csv(df, f"{name}_{idx}")
@@ -182,7 +197,15 @@ class QueryParser:
         df = pd.concat(df_list, axis='columns')[['jip', 'kyslik', 'upv', 
                                                  'ecmo', 'tezky_upv_ecmo',
                                                  'prirustkovy_pocet_nakazenych']].reset_index()
-        df = df.melt('datum', var_name='Kategorie', value_name='Pocet')
+        df = df.rename({'datum': 'Date',
+                        'prirustkovy_pocet_nakazenych': 'New cases',
+                        'jip': 'Intensive care unit',
+                        'kyslik':'Oxygen',
+                        'upv': 'Artificial lung ventilation',
+                        'ecmo': 'ECMO',
+                        'tezky_upv_ecmo': 'ALV + ECMO'},
+                        axis='columns')
+        df = df.melt('Date', var_name='Category', value_name='Count')
 
         if export:
             self.__export_to_csv(df, f"{name}")
