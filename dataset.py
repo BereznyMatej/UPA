@@ -52,7 +52,7 @@ class Dataset:
             self.db = self.client[self.name]
 
 
-    def download_and_insert(self, name, url, schema_url):
+    def download_and_insert(self, name, url, schema_url, update=False):
         """Downloads the data (& schema if its not already present in db) from urls specified in params
         and inserts them into the db.
 
@@ -60,6 +60,7 @@ class Dataset:
             name (str): name under which collection will be stored in db
             url (str): link for downloading data
             schema_url (str): link for downloading schema for aforementioned data
+            update (bool): if True, updates the existing table instead of only downloading new one
         """
         print(f"Processing {name}... ", end=' ')
         schema_name = f"{name}_schema"
@@ -69,11 +70,20 @@ class Dataset:
         if not schema:
             schema = requests.get(schema_url, headers={'user-agent' : ""}).content.decode('utf-8-sig')
             schema = json.loads(schema)['tableSchema']
+            schema['columns'].pop(0)
             self.__save_schema(schema, schema_name)
         else:
             schema = schema
 
-        data = self.parse(pd.read_csv(url), schema)
+        data = pd.read_csv(url, index_col=0)
+        data.index.names = ['_id']
+        data = self.parse(data, schema)
+
+        if update:
+            old_data = self.get_dataframe(name)
+            self.clear(collection_name=name)
+            data = old_data.append(data)
+            data = data[~data.index.duplicated(keep='last')]
 
         self.insert(data, name)
         print("Done.")
@@ -126,6 +136,7 @@ class Dataset:
         """
         schema = self.get(f"{name}_schema")
         data = pd.DataFrame(iter(self.get(name)))
+        data = data.set_index(data.columns[0])
         return self.parse(data, schema)
 
 
@@ -151,5 +162,8 @@ class Dataset:
             name (str): name under which collection will be stored in db
         """
         table = self.db[name]
-        data.index = data.index.map(str)
-        table.insert_many(data.to_dict('records'))
+        table.insert_many(data.reset_index().to_dict('records'))
+    
+
+    def __delete__(self):
+        self.session.close()
