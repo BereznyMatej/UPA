@@ -1,6 +1,7 @@
 #!/bin/bash
 
 [[ -d "data" ]] || mkdir "data"
+[[ -d "plts" ]] || mkdir "plts"
 
 distro=$(cat /etc/os-release | grep 'Ubuntu')
 

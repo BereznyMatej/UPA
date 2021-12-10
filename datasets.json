@@ -6,9 +6,9 @@
         "schema_url": "https://onemocneni-aktualne.mzcr.cz/api/v2/covid-19/osoby.csv-metadata.json"
         },
         {
-        "name": "vylieceny_kraj",
-        "url": "https://onemocneni-aktualne.mzcr.cz/api/v2/covid-19/vyleceni.csv",
-        "schema_url": "https://onemocneni-aktualne.mzcr.cz/api/v2/covid-19/vyleceni.csv-metadata.json"
+        "name": "statistika_celkovo",
+        "url": "https://onemocneni-aktualne.mzcr.cz/api/v2/covid-19/nakazeni-vyleceni-umrti-testy.csv",
+        "schema_url": "https://onemocneni-aktualne.mzcr.cz/api/v2/covid-19/nakazeni-vyleceni-umrti-testy.csv-metadata.json"
         },
         {
         "name": "umrtia_kraj",
@@ -24,6 +24,31 @@
         "name": "okresy",
         "url": "https://onemocneni-aktualne.mzcr.cz/api/v2/covid-19/kraj-okres-nakazeni-vyleceni-umrti.csv",
         "schema_url": "https://onemocneni-aktualne.mzcr.cz/api/v2/covid-19/kraj-okres-nakazeni-vyleceni-umrti.csv-metadata.json"
+        },
+        {
+        "name": "obyvatelia",
+        "url":"https://www.czso.cz/documents/62353418/143522504/130142-21data043021.csv/760fab9c-d079-4d3a-afed-59cbb639e37d?version=1.1",
+        "schema_url": "https://www.czso.cz/documents/62353418/143522504/130142-21schema043021.json/07ce4a89-97ab-4da9-a8f8-c7c403d9c4b9?version=1.1"
+        },
+        {
+        "name": "jip_ockovanie",
+        "url": "https://onemocneni-aktualne.mzcr.cz/api/v2/covid-19/ockovani-jip.csv",
+        "schema_url": "https://onemocneni-aktualne.mzcr.cz/api/v2/covid-19/ockovani-jip.csv-metadata.json"
+        },
+        {
+        "name": "hospitalizovani_ockovanie",
+        "url": "https://onemocneni-aktualne.mzcr.cz/api/v2/covid-19/ockovani-hospitalizace.csv",
+        "schema_url": "https://onemocneni-aktualne.mzcr.cz/api/v2/covid-19/ockovani-hospitalizace.csv-metadata.json"
+        },
+        {
+        "name": "zemreli_ockovanie",
+        "url": "https://onemocneni-aktualne.mzcr.cz/api/v2/covid-19/ockovani-umrti.csv",
+        "schema_url": "https://onemocneni-aktualne.mzcr.cz/api/v2/covid-19/ockovani-umrti.csv-metadata.json"
+        },
+        {
+        "name": "ockovanie_kraj",
+        "url": "https://onemocneni-aktualne.mzcr.cz/api/v2/covid-19/ockovani.csv",
+        "schema_url": "https://onemocneni-aktualne.mzcr.cz/api/v2/covid-19/ockovani.csv-metadata.json"
         }
     ]
 }
