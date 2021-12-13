@@ -6,12 +6,10 @@ Autory: Matej Berezný, Ondrej Valo, Švenk Adam
 Login: xberez03, xvaloo00, xsvenk00
 
 ## Popis dátových sád
-<<<<<<< HEAD
 Dáta sú čítané z neskôr uvedených zdrojov a ukladané pomocou MongoDB na zadarmo hosťovaný klaster, kde sú údaje uložené v dokumentoch BSON (binárny JSON) s dynamickou schémou. 
 Dátové sady boli získane z:
 https://onemocneni-aktualne.mzcr.cz/api/v2/covid-19m
-=======
->>>>>>> documentation: Added description about more data sets
+https://www.czso.cz/csu/czso/obyvatelstvo-podle-petiletych-vekovych-skupin-a-pohlavi-v-krajich-a-okresech
 ### COVID-19: Prehľad osôb s potvrdenou nákazou podľa hlásenia krajských hygienických staníc
 **Popis:**
 Dátová sada obsahuje denní prehľad osôb s preukázanou nákazou COVID-19 podľa hlásenia krajských hygienických staníc.
@@ -19,12 +17,8 @@ Dátová sada obsahuje denní prehľad osôb s preukázanou nákazou COVID-19 po
 **Schéma:**
 | stĺpec | dátový typ | význam |
 |--|--|--|
-<<<<<<< HEAD
 | id: | string | identifikačný reťazec  |
 | datum: | string | dátum dňa potvrdenia ochorenia  |
-=======
-| datum: | date | dátum dňa potvrdenia ochorenia  |
->>>>>>> documentation: Added description about more data sets
 | vek: | integer | vek osoby |
 | pohlavi: | string | pohlavie osoby |
 | kraj_nuts_kod: | string | kód kraja bydliska osoby |
@@ -93,19 +87,34 @@ Dátová sada obsahuje kumulatívne denné počty osôb s preukázaným ochoren�
 **Schéma:**
 | stĺpec | dátový typ | význam |
 |--|--|--|
-<<<<<<< HEAD
 | id: | string | identifikačný reťazec  |
 | datum: | string | dátum dňa údajov |
-=======
-| datum: | date | dátum dňa potvrdenia vyliečenia ochorenia  |
-| vek: | integer | vek osoby |
-| pohlavi: | string | pohlavie osoby |
->>>>>>> documentation: Added description about more data sets
 | kraj_nuts_kod: | string | kód kraja bydliska osoby |
 | okres_lau_kod: | string | kód okresu bydliska osoby |
 | kumulativni_pocet_nakazenych: | integer | kumulatívny počet nakazených v okrese |
 | kumulativni_pocet_vylecenych: | integer | kumulatívny počet vyliečených v okrese |
 | kumulativni_pocet_umrti: | integer | kumulatívny počet úmrtí v okrese |
+
+### Obyvateľstvo podľa päťročných vekových skupín a pohlaví v krajoch a okresoch
+**Popis:**
+Dátová sada obsahuje časový rad so štatistickými údajmi od roku 2010 o vekovom zložení mužov a žien (päťročnej vekovej skupiny) s trvalým alebo dlhodobým pobytom, a to podľa stavu k 31. 12. Údaje sú publikované za okresy, kraje a Českú republiku.
+
+**Schéma:**
+| stĺpec | dátový typ | význam |
+|--|--|--|
+| idhod: | string | unikátny identifikátor údajov verejnej databázy ČSU |
+| hodnota: | number | zistená hodnota |
+| stapro_kod: | string | kód štatistickej premenej v systéme SMS UKAZ |
+| pohlavi_cis: | string | číselník pre pohlavie |
+| pohlavi_kod: | string | kód pohlavia |
+| vek_cis: | string | číselník pre vek |
+| vek_kod: | string | kód veku |
+| vuzemi_cis: | string | kód číselníka pre referenčné územie, číselní odpovedá typológii územia, okresy majú kód 101, správne obvody ORP 65 |
+| vuzemi_kod: | string | kód položky z číselníku pre referenčné územie |
+| casref_do: | date | referenčné obdobie, vo formáte RRRR-MM-DD |
+| pohlavi_txt: | string | text položky z číselníka pohlavia |
+| vek_txt: | string | text položky pre vek |
+| vuzemi_txt: | string | text z číselníka pre referenčné územie |
 
 ### COVID-19: Prehľad hospitalizácií na JIP s ohľadom na vykázané očkovania
 **Popis:**
@@ -180,7 +189,6 @@ Dátová sada obsahuje počet, percento a priemerný vek zosnulých. Každý ria
 **Popis:**
 Dátová sada poskytuje agregované dáta o vykázaných očkovaniach na úrovni krajov ČR. Každý riadok prehľadu popisuje počet vykázaných očkovaní v danom dni, za vekovú skupinu, s použitím vybranej očkovacej látky a vo vybranom kraji.
 
-<<<<<<< HEAD
 **Schéma:**
 | stĺpec | dátový typ | význam |
 |--|--|--|
@@ -193,58 +201,6 @@ Dátová sada poskytuje agregované dáta o vykázaných očkovaniach na úrovni
 | prvnich_davek: | integer | počet prvej dávky|
 | druhych_davek: | integer | počet druhej dávky |
 | celkem_davek: | integer | celkový počet zaočkovaní |
-=======
-### COVID-19: Prehľad úmrtí podľa hlásenia krajských hygienických staníc
-**Popis:**
-Dátová sada obsahujúca záznamy o úmrtiach v súvislosti s ochorením COVID‑19 podľa hlásenia krajských hygienických staníc. Zahŕňa úmrtie osôb, ktoré boli pozitívne testované na COVID‑19 (metódou PCR) bez ohľadu na to, aké boli príčiny ich úmrtia, a ku ktorých úmrtiu došlo v rámci hospitalizácie alebo mimo nej.
-
-**Schéma:**
-| stĺpec | dátový typ | význam |
-|--|--|--|
-| datum: | date | dátum dňa potvrdenia úmrtia  |
-| vek: | integer | vek osoby |
-| pohlavi: | string | pohlavie osoby |
-| kraj_nuts_kod: | string | kód kraja bydliska osoby |
-| okres_lau_kod: | string | kód okresu bydliska osoby |
-
-### COVID-19: Prehľad hospitalizovaných
-**Popis:**
-Dátová sada obsahujúca dáta hospitalizovaných pacientov popisujúca priebeh hospitalizácie (aktuálny a celkový počet hospitalizovaných, rozdelenie podľa príznakov, rozdelenie podľa podporných prístrojov, počet úmrtí).
-
-**Schéma:**
-| stĺpec | dátový typ | význam |
-|--|--|--|
-| datum: | date | dátum dňa potvrdenia vyliečenia ochorenia  |
-| pacient_prvni_zaznam: | integer |  |
-| kum_pacient_prvni_zaznam: | integer |  |
-| pocet_hosp: | integer |  |
-| stav_bez_priznaku: | integer |  |
-| stav_lehky: | integer |  |
-| stav_stredni: | integer |  |
-| stav_tezky: | integer |  |
-| jip: | integer |  |
-| kyslik: | integer |  |
-| hfno: | integer |  |
-| upv: | integer |  |
-| ecmo: | integer |  |
-| tezky_upv_ecmo: | integer |  |
-| umrti: | integer |  |
-| kum_umrti: | integer |  |
-
-### COVID-19: Prehľad úmrtí podľa hlásenia krajských hygienických staníc
-**Popis:**
-Dátová sada podľa krajov a okresov ČR obsahujúca kumulatívne denné počty osôb s preukázaným ochorením COVID-19 podľa validovaných hlásení krajských hygienických staníc, kumulatívne denné počty vyliečených po ochorení COVID-19 podľa hlásenia krajských hygienických staníc a kumulatívne denné počty úmrtí v súvislosti s ochorením COVID 19 podľa hlásenia krajských hygienických staníc a hospitalizačných úmrtí.
-
-**Schéma:**
-| stĺpec | dátový typ | význam |
-|--|--|--|
-| datum: | date | dátum dňa potvrdenia úmrtia  |
-| kraj_nuts_kod: | string | kód kraja bydliska osoby |
-| okres_lau_kod: | string | kód okresu bydliska osoby |
-| kumulativni_pocet_nakazenych: | integer |  |
-| kumulativni_pocet_vylecenych: | integer |  |
-| kumulativni_pocet_umrti: | integer |  |
->>>>>>> documentation: Added description about more data sets
 
 ## Implementácia riešenia
 ### dataset.py
