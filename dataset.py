@@ -81,9 +81,7 @@ class Dataset:
 
         if update:
             old_data = self.get_dataframe(name)
-            self.clear(collection_name=name)
-            data = old_data.append(data)
-            data = data[~data.index.duplicated(keep='last')]
+            data = data[~data.isin(old_data)].dropna()
 
         self.insert(data, name)
         print("Done.")
