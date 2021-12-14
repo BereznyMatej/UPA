@@ -3,7 +3,7 @@ import numpy as np
 import json
 import requests
 
-from ssh_pymongo import MongoSession
+from pymongo import MongoClient
 
 class Dataset:
 
@@ -18,11 +18,8 @@ class Dataset:
                       'number': np.uint32,
                       'string': str,
                       'boolean': bool}
-        self.session = MongoSession(host='ec2-13-40-24-161.eu-west-2.compute.amazonaws.com',
-                                    user='ubuntu',
-                                    key='UPA-projekt.pem')
-        self.client = self.session.connection
         self.name = name
+        self.client = MongoClient("mongodb://ubuntu:klat8klat@ec2-13-40-24-161.eu-west-2.compute.amazonaws.com:27017/{}?authSource=admin".format(self.name))
         self.db = self.client[self.name]
         self.region_mapper = {'CZ010': 'Hlavní město Praha',
                               'CZ020': 'Středočeský kraj',
