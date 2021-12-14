@@ -159,8 +159,9 @@ class Dataset:
             data (pd.DataFrame): dataframe containing data
             name (str): name under which collection will be stored in db
         """
-        table = self.db[name]
-        table.insert_many(data.reset_index().to_dict('records'))
+        if not data.empty:
+            table = self.db[name]
+            table.insert_many(data.reset_index().to_dict('records'))
     
 
     def __delete__(self):
