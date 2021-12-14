@@ -159,7 +159,3 @@ class Dataset:
         if not data.empty:
             table = self.db[name]
             table.insert_many(data.reset_index().to_dict('records'))
-    
-
-    def __delete__(self):
-        self.session.close()
