@@ -215,8 +215,15 @@ python3 download.py [-h][--update COLLECTION_NAME] [--download] [--clear] [--fet
   -c, --clear Vymaže databázu
   -s COLLECTION_NAME, --fetch COLLECTION_NAME Načíta zadanú kolekciu z db
 ```
-
 ### setup.sh
 Skript na stiahnutie potrebných knižníc a závislostí pre fungovanie riešenia
 ### datasets.json
 Obsahuje potrebné linky na stiahnutie dátových sád.
+### prepare_data.py
+Skript pre prípravu dát, kde pre každý dotaz v rámci zadania extrahuje dáta z serveru upraví ich a uloží ich do .cvs súborov.
+### plot.py
+Skript na vykresľovanie grafov z lokálne uložených .cvs súborov.
+## Vyhotovené úlohy zadania 
+### 1.dotaz
+Prvá pod úloha dotazov skupiny A. Dáta boli pripravené pomocov skriptu *prepare_data.py* v ktorom sa stiahla kolekcia *nakazeny_kraj* a upravili názvy stĺpcov pre lepšiu prehľadnosť a následne uložila ako .csv súbor. Ďalej pomocou skriptu *plot.py* bol vygenerovaný nasledovný graf z uloženého .csv súboru, ktorý predstavuje vekové rozloženie pacientov pozitívnych na covid-19 podľa regiónu.
+![vekové rozloženie pacientov pozitívnych na covid-19 podľa regiónu](https://cdn.discordapp.com/attachments/290943108303290368/920419090793906176/Q1.png)
