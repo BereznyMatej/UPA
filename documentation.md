@@ -221,9 +221,27 @@ Skript na stiahnutie potrebných knižníc a závislostí pre fungovanie riešen
 Obsahuje potrebné linky na stiahnutie dátových sád.
 ### prepare_data.py
 Skript pre prípravu dát, kde pre každý dotaz v rámci zadania extrahuje dáta z serveru upraví ich a uloží ich do .cvs súborov.
+```
+python3 prepare_data.py [--query_list QUERY1 QUERY2...]
+	-q QUERY_LIST, --query_list QUERY_LIST vygeneruje .csv súbor pre jeden z zadaných dotazov 
+```
 ### plot.py
-Skript na vykresľovanie grafov z lokálne uložených .cvs súborov.
+Skript na vykresľovanie grafov z lokálne uložených .cvs súborov. Pokiaľ nenájde potrebné .csv súbory, sám si ich vygeneruje pomocou *prepare_data.py*.
+```
+python3 plot.py [--query_list QUERY1 QUERY2...]
+	-q QUERY_LIST, --query_list QUERY_LIST vygeneruje .csv súbor pre jeden z zadaných dotazov 
+```
 ## Vyhotovené úlohy zadania 
-### 1.dotaz
-Prvá pod úloha dotazov skupiny A. Dáta boli pripravené pomocov skriptu *prepare_data.py* v ktorom sa stiahla kolekcia *nakazeny_kraj* a upravili názvy stĺpcov pre lepšiu prehľadnosť a následne uložila ako .csv súbor. Ďalej pomocou skriptu *plot.py* bol vygenerovaný nasledovný graf z uloženého .csv súboru, ktorý predstavuje vekové rozloženie pacientov pozitívnych na covid-19 podľa regiónu.
-![vekové rozloženie pacientov pozitívnych na covid-19 podľa regiónu](https://cdn.discordapp.com/attachments/290943108303290368/920419090793906176/Q1.png)
+### 1. dotaz skupiny A
+Dáta boli pripravené pomocov skriptu *prepare_data.py* ktorý načítal kolekcie *hospitalizovany* a *statistika_celkovo* z nami spravovanej databázy, v ktorý boli dáta zoskupené podľa dátumu a následne pomocou dátumu prepojené. Taktiež boli premenované niektoré názvy stĺpcovú pre lepšiu prehľadnosť, a táto spojená kolekcia uložená do .csv súboru. Pomocou skriptu  *plot.py* bol uložený .csv súbor zobrazený v nasledujúcom grafe, predstavujúci vývoj Covid-19 v priebehu času.
+![Vývoj Covid-19 v priebehu času.](https://cdn.discordapp.com/attachments/290943108303290368/920426783524937748/Q2.png)
+### 2. dotaz skupiny A
+Dáta boli pripravené pomocov skriptu *prepare_data.py* ktorý načítal kolekciu *nakazeny_kraj* z nami spravovanej databázy a upravil názvy stĺpcov pre lepšiu prehľadnosť a následne uložil túto kolekciu ako .csv súbor. Ďalej pomocou skriptu *plot.py* bol vygenerovaný nasledovný graf z uloženého .csv súboru, ktorý predstavuje vekové rozloženie pacientov pozitívnych na covid-19 podľa regiónu.
+![Vekové rozloženie pacientov pozitívnych na covid-19 podľa regiónu.](https://cdn.discordapp.com/attachments/290943108303290368/920419090793906176/Q1.png)
+### Dotaz skupiny B
+Skript *prepare_data.py* načítal kolekcie *'obyvatelia* a *nakazeny_kraj* upravil niektoré názvy stĺpcov a zoskupil dáta podľa dátumov a pridal nový stĺpec predstavujúci prepočítaný počet nakazených na jedného obyvateľa. Následne v skripte *plot.py* boli tabuľky prepojené pomocou regiónu a vygenerovaný graf predstavujúci pozitívne prípady Covid-19 na celkovú populáciu v regiónoch.![Pozitívne prípady Covid-19 na celkovú populáciu v regiónoch.](https://media.discordapp.net/attachments/290943108303290368/920432189211025469/query_b.png?width=1340&height=670)
+### Vlastný dotaz 1
+Pomocou skriptu *prepare_data.py* boli z databáze načítané kolekcie *hospitalizovani_ockovanie*, *zemreli_ockovanie*, *jip_ockovanie*, *ockovanie_kraj* a *obyvatelia*, následne upravené niektoré stĺpce a uložené do jedného .csv súboru. Ďalej skript *plot.py* z uloženého .csv súboru generoval graf pomerov úmrtia, JIP a hospitalizácie medzi očkovanými a neočkovanými osobami.![Pomer úmrtia/JIP/hospitalizácie medzi očkovanými a neočkovanými osobami](https://cdn.discordapp.com/attachments/290943108303290368/920432189445914654/query_custom1.png)
+### Vlastný dotaz 2
+Za pomoci *prepare_data.py* boli načítané a upravené kolekcie *hospitalizovany*, *statistika_celkovo*. Údaje v oboch kolekciách zoskupené a následne prepojené pomocou dátumu a nakoniec uložené ako .csv súbor. Pokračujúc skript *plot.py* generoval graf predstavujúci porovnanie medzi novými kritickými prípadmi a celkovo novými prípadmi COVID-19.
+![Porovnanie medzi novými kritickými prípadmi a celkovo novými prípadmi COVID-19.](https://cdn.discordapp.com/attachments/290943108303290368/920432189752107148/query_custom2.png)
