@@ -202,18 +202,79 @@ Dátová sada poskytuje agregované dáta o vykázaných očkovaniach na úrovni
 | druhych_davek: | integer | počet druhej dávky |
 | celkem_davek: | integer | celkový počet zaočkovaní |
 
+### COVID-19: Očkovacie miesta v ČR
+**Popis:**
+Dátová sada poskytuje zoznam verejných očkovacích miest v ČR, kde sú podávané očkovacie látky proti ochoreniu COVID-19.
+
+**Schéma:**
+| stĺpec | dátový typ | význam |
+|--|--|--|
+| ockovaci_misto_id: | string | identifikačný reťazec očkovacieho miesta |
+| ockovaci_misto_nazev: | string | názov očkovacieho miesta |
+| okres_nuts_kod: | string | kód kraja očkovacieho miesta |
+| operacni_status: | boolean | operačný status očkovacieho miesta |
+| ockovaci_misto_adresa: | string | adresa očkovacieho miesta |
+| latitude: | string | latitude očkovacieho miesta |
+| longitude: | string | longitude očkovacieho miesta |
+| ockovaci_misto_typ: | string | typ očkovacieho miesta |
+| nrpzs_kod: | string | kód národného registra
+poskytovateľov zdravotných služieb |
+| minimalni_kapacita: | integer | minimálna kapacita osôb očkovacieho miesta |
+| bezbarierovy_pristup: | boolean | možnosť bezbariérového prístupu |
+
+### COVID-19: Prehľad vykázaných očkovaní podľa očkovacích miest ČR
+**Popis:**
+Dátová sada poskytuje riadkové dáta o vykázaných očkovaniach na jednotlivých očkovacích miestach ČR. Každý riadok prehľadu popisuje jedno vykázané očkovanie v danom dni a vekovej skupine, s použitím vybranej očkovacej látky, na konkrétnom očkovacom mieste a vo vybranom kraji.
+
+**Schéma:**
+| stĺpec | dátový typ | význam |
+|--|--|--|
+| id: | string | identifikačný reťazec očkovania |
+| datum: | string | dátum dňa očkovania |
+| vakcina: | string | názov vakcíny |
+| kraj_nuts_kod: | string | kód kraja očkovacej stanice |
+| kraj_nazev: | string | názov kraja očkovacej stanice |
+| zarizeni_kod: | string | kód očkovacieho miesta |
+| zarizeni_nazev: | string | názov očkovacieho miesta |
+| poradi_davky: | integer | poradie očkovacej dávky |
+| vekova_skupina: | string | veková skupina zaočkovaného |
+
+### COVID-19: Očkovacie zriadenie
+**Popis:**
+Dátová sada poskytuje zoznam očkovacích zriadení v ČR ako doplnenie zoznamu očkovacích miest, kde sú podávané očkovacie látky proti ochoreniu COVID-19. Jedná sa predovšetkým o praktických lekárov, ale aj ďalších, kde sa očkovanie vykonáva.
+
+**Schéma:**
+| stĺpec | dátový typ | význam |
+|--|--|--|
+| id: | string | identifikačný reťazec zriadenia |
+| zarizeni_kod: | string | kód zriadenia |
+| zarizeni_nazev: | string | názov zriadenia |
+| provoz_zahajen: | boolean | fungovanie zriadenia |
+| kraj_nuts_kod: | string | kód kraju kde sa nachádza zriadenie |
+| kraj_nazev: | string | názov kraja kde sa nachádza zriadenie |
+| okres_lau_kod: | string | kód okresu kde sa nachádza zriadenie |
+| okres_nazev: | string | názov okresu kde sa nachádza zriadenie |
+| zrizovatel_kod: | integer | kód zriaďovateľa zriadenia |
+| zrizovatel_nazev: | string | názov zriaďovateľa zriadenia |
+| provoz_ukoncen: | string | dátum ukončenia prevádzky zriadenia |
+| prakticky_lekar: | boolean | prítomnosť praktického lekára |
+
 ## Implementácia riešenia
 ### dataset.py
 Obsahuje potrebné funkcie pre manipuláciu s dátovými sadami, ako napríklad ich sťahovanie, spracovanie, odstránenie z DB, vkladanie či načítanie z DB.
 ### download.py
 Pracuje s funkciami v *dataset.py* a interaguje s databázou. Príklad na spustenie:
 ```sh 
-python3 download.py [-h][--update COLLECTION_NAME] [--download] [--clear] [--fetch COLLECTION_NAME]
-	-h, --help Zobrazí túto pomocnú správu a ukončí sa
+python3 download.py [-h][--update COLLECTION_NAME] 
+					[--download] [--clear] 
+					[--fetch COLLECTION_NAME] 
+					[--workers INTEGER]
+  -h, --help Zobrazí túto pomocnú správu a ukončí sa
   -u COLLECTION_NAME, --update COLLECTION_NAME Aktualizuje zadanú kolekciu v db. Na aktualizáciu každej kolekcie použite „all“.
   -d, --download Vymaže databázu a stiahne množiny údajov uložené v súbore datasets.json
   -c, --clear Vymaže databázu
   -s COLLECTION_NAME, --fetch COLLECTION_NAME Načíta zadanú kolekciu z db
+  -w INTEGER, --workers INTEGER určuje počet vytvorenćh vlákien pre ukladanie dát do databázi
 ```
 ### setup.sh
 Skript na stiahnutie potrebných knižníc a závislostí pre fungovanie riešenia
@@ -231,6 +292,8 @@ Skript na vykresľovanie grafov z lokálne uložených .cvs súborov. Pokiaľ ne
 python3 plot.py [--query_list QUERY1 QUERY2...]
 	-q QUERY_LIST, --query_list QUERY_LIST vygeneruje .csv súbor pre jeden z zadaných dotazov 
 ```
+## Doplnenie nedostatkov 1. zadania
+V rámci druhého zadania boli taktiež opravené aktualizácie dát a indexácia dát kolekcií.
 ## Vyhotovené úlohy zadania 
 ### 1. dotaz skupiny A
 Dáta boli pripravené pomocov skriptu *prepare_data.py* ktorý načítal kolekcie *hospitalizovany* a *statistika_celkovo* z nami spravovanej databázy, v ktorý boli dáta zoskupené podľa dátumu a následne pomocou dátumu prepojené. Taktiež boli premenované niektoré názvy stĺpcovú pre lepšiu prehľadnosť, a táto spojená kolekcia uložená do .csv súboru. Pomocou skriptu  *plot.py* bol uložený .csv súbor zobrazený v nasledujúcom grafe, predstavujúci vývoj Covid-19 v priebehu času.
