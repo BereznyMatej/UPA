@@ -266,12 +266,12 @@ Obsahuje potrebné funkcie pre manipuláciu s dátovými sadami, ako napríklad 
 Pracuje s funkciami v *dataset.py* a interaguje s databázou. Príklad na spustenie:
 ```sh 
 python3 download.py [-h][--update COLLECTION_NAME] [--download] [--clear] [--fetch COLLECTION_NAME] [--workers INTEGER]
-  -h, --help Zobrazí túto pomocnú správu a ukončí sa
-  -u COLLECTION_NAME, --update COLLECTION_NAME Aktualizuje zadanú kolekciu v db. Na aktualizáciu každej kolekcie použite „all“.
-  -d, --download Vymaže databázu a stiahne množiny údajov uložené v súbore datasets.json
-  -c, --clear Vymaže databázu
-  -s COLLECTION_NAME, --fetch COLLECTION_NAME Načíta zadanú kolekciu z db
-  -w INTEGER, --workers INTEGER určuje počet vytvorenćh vlákien pre ukladanie dát do databázi
+	  -h, --help Zobrazí túto pomocnú správu a ukončí sa
+	  -u COLLECTION_NAME, --update COLLECTION_NAME Aktualizuje zadanú kolekciu v db. Na aktualizáciu každej kolekcie použite „all“.
+	  -d, --download Vymaže databázu a stiahne množiny údajov uložené v súbore datasets.json
+	  -c, --clear Vymaže databázu
+	  -s COLLECTION_NAME, --fetch COLLECTION_NAME Načíta zadanú kolekciu z db
+	  -w INTEGER, --workers INTEGER určuje počet vytvorenćh vlákien pre ukladanie dát do databázi
 ```
 ### setup.sh
 Skript na stiahnutie potrebných knižníc a závislostí pre fungovanie riešenia
