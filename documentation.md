@@ -265,10 +265,7 @@ Obsahuje potrebné funkcie pre manipuláciu s dátovými sadami, ako napríklad 
 ### download.py
 Pracuje s funkciami v *dataset.py* a interaguje s databázou. Príklad na spustenie:
 ```sh 
-python3 download.py [-h][--update COLLECTION_NAME] 
-					[--download] [--clear] 
-					[--fetch COLLECTION_NAME] 
-					[--workers INTEGER]
+python3 download.py [-h][--update COLLECTION_NAME] [--download] [--clear] [--fetch COLLECTION_NAME] [--workers INTEGER]
   -h, --help Zobrazí túto pomocnú správu a ukončí sa
   -u COLLECTION_NAME, --update COLLECTION_NAME Aktualizuje zadanú kolekciu v db. Na aktualizáciu každej kolekcie použite „all“.
   -d, --download Vymaže databázu a stiahne množiny údajov uložené v súbore datasets.json
