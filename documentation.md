@@ -264,8 +264,10 @@ Dátová sada poskytuje zoznam očkovacích zriadení v ČR ako doplnenie zoznam
 Obsahuje potrebné funkcie pre manipuláciu s dátovými sadami, ako napríklad ich sťahovanie, spracovanie, odstránenie z DB, vkladanie či načítanie z DB.
 ### download.py
 Pracuje s funkciami v *dataset.py* a interaguje s databázou. Príklad na spustenie:
-```sh 
+```
 python3 download.py [-h][--update COLLECTION_NAME] [--download] [--clear] [--fetch COLLECTION_NAME] [--workers INTEGER]
+```
+```
 	  -h, --help Zobrazí túto pomocnú správu a ukončí sa
 	  -u COLLECTION_NAME, --update COLLECTION_NAME Aktualizuje zadanú kolekciu v db. Na aktualizáciu každej kolekcie použite „all“.
 	  -d, --download Vymaže databázu a stiahne množiny údajov uložené v súbore datasets.json
@@ -281,12 +283,16 @@ Obsahuje potrebné linky na stiahnutie dátových sád.
 Skript pre prípravu dát, kde pre každý dotaz v rámci zadania extrahuje dáta z serveru upraví ich a uloží ich do .cvs súborov.
 ```
 python3 prepare_data.py [--query_list QUERY1 QUERY2...]
+```
+```
 	-q QUERY_LIST, --query_list QUERY_LIST vygeneruje .csv súbor pre jeden z zadaných dotazov 
 ```
 ### plot.py
 Skript na vykresľovanie grafov z lokálne uložených .cvs súborov. Pokiaľ nenájde potrebné .csv súbory, sám si ich vygeneruje pomocou *prepare_data.py*.
 ```
 python3 plot.py [--query_list QUERY1 QUERY2...]
+```
+```
 	-q QUERY_LIST, --query_list QUERY_LIST vygeneruje .csv súbor pre jeden z zadaných dotazov 
 ```
 ## Doplnenie nedostatkov 1. zadania
