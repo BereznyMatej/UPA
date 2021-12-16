@@ -292,7 +292,8 @@ class QueryParser:
         df = self.loaded_dfs['obyvatelia'].copy()
         df2 = self.loaded_dfs['obce'].copy()
         
-        df3 = pd.read_csv('ockovaci-mista.csv', index_col=0)
+        df3 = pd.read_csv('https://onemocneni-aktualne.mzcr.cz/api/v2/covid-19/ockovaci-mista.csv',
+                          index_col=0)
         df3['zarizeni_kod'] = df3['zarizeni_kod'].astype(np.uint64)
         df4 = self.loaded_dfs['ockovanie_zariadenia'].copy()
         df4['zarizeni_kod'] = df4['zarizeni_kod'].astype(np.uint64)
