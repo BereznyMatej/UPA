@@ -253,7 +253,7 @@ class QueryParser:
                        '90 až 95 (více nebo rovno 90 a méně než 95)',
                        'Od 95 (více nebo rovno 95)']]
 
-        age_categories = ['0-15', '15-55', '55+']
+        age_categories = ['Age [0-15]', 'Age [15-55]', 'Age [55+]']
 
         latest_date = pd.to_datetime(df['casref_do']).max()
 
@@ -293,17 +293,31 @@ class QueryParser:
 
         df2 = df2.iloc[1:]
 
-        df['infikovani'] = df2['datum']
+        df['Infected'] = df2['datum']
 
         df3 = df3.merge(df4, on='zarizeni_kod', how='left')
         df3['datum'] = pd.to_datetime(df3.datum)
         df3 = df3.groupby([pd.Grouper(key='datum',
                                       freq='3M'),
-                          'okres_nazev']).size().reset_index(name='pocet_ockovani')
+                          'okres_nazev']).size().reset_index(name='pocet_ockovanych')
         df3 = df3[(df3['datum'] >= df3.datum.unique()[-4])]
         df3 = df3.groupby('okres_nazev').sum()
 
         df = pd.concat([df, df3], axis='columns')
+
+        df['Vaccination_percentage'] = (df['pocet_ockovanych']/((df['Age [0-15]'] + df['Age [15-55]'] + df['Age [55+]']) / 100))
+
+        discretization = [
+            (df['Vaccination_percentage'] <= 10),
+            (df['Vaccination_percentage'] > 10) & (df['Vaccination_percentage'] <= 25),
+            (df['Vaccination_percentage'] > 25) & (df['Vaccination_percentage'] <= 50),
+            (df['Vaccination_percentage'] > 50)]
+        
+        discretization_values = ['low', 'partial', 'about_a_quarter', 'above_a_half']
+
+        df['Vaccination'] = np.select(discretization, discretization_values)
+
+        df = df.iloc[:50]
 
         if export:
             self.__export_to_csv(df, f"{name}")
