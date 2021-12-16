@@ -17,3 +17,19 @@ python3 download.py [-h][--update COLLECTION_NAME] [--download] [--clear] [--fet
   -c, --clear Vymaže databázu
   -s COLLECTION_NAME, --fetch COLLECTION_NAME Načíta zadanú kolekciu z db
 ```
+### prepare_data.py
+Skript pre prípravu dát, kde pre každý dotaz v rámci zadania extrahuje dáta z serveru upraví ich a uloží ich do .cvs súborov.
+```
+python3 prepare_data.py [--query_list QUERY1 QUERY2...]
+```
+```
+	-q QUERY_LIST, --query_list QUERY_LIST vygeneruje .csv súbor pre jeden z zadaných dotazov 
+```
+### plot.py
+Skript na vykresľovanie grafov z lokálne uložených .cvs súborov. Pokiaľ nenájde potrebné .csv súbory, sám si ich vygeneruje pomocou *prepare_data.py*.
+```
+python3 plot.py [--query_list QUERY1 QUERY2...]
+```
+```
+	-q QUERY_LIST, --query_list QUERY_LIST vygeneruje .csv súbor pre jeden z zadaných dotazov 
+```
