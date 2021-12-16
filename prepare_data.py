@@ -276,6 +276,15 @@ class QueryParser:
         return df
     
     def query_c(self, name, export=False) -> pd.DataFrame:
+        """Prepares data for query c. For futher description, refer to documentation.
+
+        Args:
+            name (str): query name
+            export (bool, optional): If True, dataframe will be exported to .csv file. Defaults to False.
+
+        Returns:
+            pd.DataFrame: processed .csv file
+        """
         df_name_list = ['obyvatelia', 'obce', 'ockovanie_zariadenia']
 
         self.__load_dfs(df_name_list)
@@ -355,13 +364,16 @@ class QueryParser:
         df3['datum'] = pd.to_datetime(df3.datum)
         df3 = df3.groupby([pd.Grouper(key='datum',
                                       freq='3M'),
-                          'okres_nazev']).size().reset_index(name='pocet_ockovanych')
+                          'okres_nazev']).size().reset_index(name='Vaccinated')
         df3 = df3[(df3['datum'] >= df3.datum.unique()[-4])]
         df3 = df3.groupby('okres_nazev').sum()
 
         df = pd.concat([df, df3], axis='columns')
 
-        df['Vaccination_percentage'] = (df['pocet_ockovanych']/((df['Age [0-15]'] + df['Age [15-55]'] + df['Age [55+]']) / 100))
+        df_unnormalized = df
+        df_unnormalized = df_unnormalized.iloc[:50]
+
+        df['Vaccination_percentage'] = (df['Vaccinated']/((df['Age [0-15]'] + df['Age [15-55]'] + df['Age [55+]']) / 100))
 
         discretization = [
             (df['Vaccination_percentage'] <= 10),
@@ -377,6 +389,7 @@ class QueryParser:
 
         if export:
             self.__export_to_csv(df, f"{name}")
+            self.__export_to_csv(df_unnormalized, f"{name}_unnormalized")
         
         return df
 
