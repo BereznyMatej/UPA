@@ -56,11 +56,6 @@
         "schema_url": "https://onemocneni-aktualne.mzcr.cz/api/v2/covid-19/prehled-ockovacich-mist.csv-metadata.json"
         },
         {
-        "name": "ockovanie_vsetky",
-        "url": "https://onemocneni-aktualne.mzcr.cz/api/v2/covid-19/ockovaci-mista.csv",
-        "schema_url": "https://onemocneni-aktualne.mzcr.cz/api/v2/covid-19/ockovaci-mista.csv-metadata.json"
-        },
-        {
         "name": "ockovanie_zariadenia",
         "url": "https://onemocneni-aktualne.mzcr.cz/api/v2/covid-19/ockovaci-zarizeni.csv",
         "schema_url": "https://onemocneni-aktualne.mzcr.cz/api/v2/covid-19/ockovaci-zarizeni.csv-metadata.json"

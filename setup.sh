@@ -14,7 +14,5 @@ else
     apt install python3 python3-pip
 fi
 
-
-
 [[ -f "requirements.txt" ]] || python3 -m pip install -r requirements.txt
 python3 -m pip install pymongo[srv]

@@ -164,7 +164,7 @@ class QueryParser:
         """Prepares data for custom query. For futher description, refer to documentation.
 
         Args:
-            name (str): query name
+            name (str): query namev 
             months (int, optional): For how many months data should be processed. Defaults to 12.
             export (bool, optional): [description]. Defaults to False.
 
@@ -283,7 +283,8 @@ class QueryParser:
         df = self.loaded_dfs['obyvatelia'].copy()
         df2 = self.loaded_dfs['obce'].copy()
         
-        df3 = pd.read_csv('ockovaci-mista.csv', index_col=0)
+        df3 = pd.read_csv('https://onemocneni-aktualne.mzcr.cz/api/v2/covid-19/ockovaci-mista.csv',
+                          index_col=0)
         df3['zarizeni_kod'] = df3['zarizeni_kod'].astype(np.uint64)
         df4 = self.loaded_dfs['ockovanie_zariadenia'].copy()
         df4['zarizeni_kod'] = df4['zarizeni_kod'].astype(np.uint64)
