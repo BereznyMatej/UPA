@@ -9,8 +9,8 @@ from pymongo import MongoClient
 class Dataset:
 
     types = {'date': np.datetime64,
-             'integer': np.uint32,
-             'number': np.uint32,
+             'integer': np.uint64,
+             'number': np.uint64,
              'string': str,
              'boolean': bool}
     region_mapper = {'CZ010': 'Hlavní město Praha',

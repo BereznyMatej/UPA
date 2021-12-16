@@ -1,6 +1,7 @@
 from typing import List
 from matplotlib.pyplot import axes
 import pandas as pd
+import numpy as np
 import argparse
 
 from dataset import Dataset
@@ -219,14 +220,17 @@ class QueryParser:
         return df
     
     def query_c(self, name, export=False) -> pd.DataFrame:
-        df_name_list = ['obyvatelia', 'obce']
+        df_name_list = ['obyvatelia', 'obce', 'ockovanie_zariadenia']
 
         self.__load_dfs(df_name_list)
         
         df = self.loaded_dfs['obyvatelia'].copy()
         df2 = self.loaded_dfs['obce'].copy()
         
-        #df3 = pd.read_csv('ockovanie.csv')
+        df3 = pd.read_csv('ockovaci-mista.csv', index_col=0)
+        df3['zarizeni_kod'] = df3['zarizeni_kod'].astype(np.uint64)
+        df4 = self.loaded_dfs['ockovanie_zariadenia'].copy()
+        df4['zarizeni_kod'] = df4['zarizeni_kod'].astype(np.uint64)
 
         age_groups = [['0 až 5 (více nebo rovno 0 a méně než 5)',
                        '5 až 10 (více nebo rovno 5 a méně než 10)',
@@ -290,6 +294,16 @@ class QueryParser:
         df2 = df2.iloc[1:]
 
         df['infikovani'] = df2['datum']
+
+        df3 = df3.merge(df4, on='zarizeni_kod', how='left')
+        df3['datum'] = pd.to_datetime(df3.datum)
+        df3 = df3.groupby([pd.Grouper(key='datum',
+                                      freq='3M'),
+                          'okres_nazev']).size().reset_index(name='pocet_ockovani')
+        df3 = df3[(df3['datum'] >= df3.datum.unique()[-4])]
+        df3 = df3.groupby('okres_nazev').sum()
+
+        df = pd.concat([df, df3], axis='columns')
 
         if export:
             self.__export_to_csv(df, f"{name}")

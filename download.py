@@ -7,7 +7,7 @@ parser.add_argument('-u', '--update', nargs='+', type=str, help="Updates the spe
 parser.add_argument('-d', '--download', nargs='+', type=str, help="Clears the database and downloads datasets stored in datasets.json")
 parser.add_argument('-c', '--clear', action="store_true", help="Clears the database")
 parser.add_argument('-s', '--fetch', type=str, help="Fetches the specified collection from db")
-parser.add_argument('-w', '--workers', type=int, default=2, help="Fetches the specified collection from db")
+parser.add_argument('-w', '--workers', type=int, default=2, help="Specifies numbers of threads used for data processing/uploading")
 
 args = parser.parse_args()
 
