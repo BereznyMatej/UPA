@@ -15,12 +15,21 @@ def parse_args():
 class QueryParser:
 
     def __init__(self, dataset) -> None:
+        """Gets the required data from db, processes them and saves into dedicated .csv files.
+
+        Args:
+            dataset (Dataset):
+        """
         self.dataset = dataset
         self.loaded_dfs = {}
 
 
     def __load_dfs(self, df_name_list) -> None:
+        """Loads the collections and saves them into self.loaded_dfs dictionary.
 
+        Args:
+            df_name_list (list): list containing collection names
+        """
         for df_name in df_name_list:
 
             print(f"Checking if data {df_name} were already processed...", end=' ')
@@ -35,20 +44,34 @@ class QueryParser:
         
     
     def __export_to_csv(self, df, name) -> None:
-    
+        """Exports dataframe to .csv file
+
+        Args:
+            df (pd.Dataframe): dataframe containing data to be exported
+            name (str): name of the .csv file
+        """
         path = f'./data/{name}.csv'
         print(f"Saving data to {path} ...", end=' ')
         df.to_csv(path)
         print(f"Done.")
 
 
-    def query_a1(self, name, export=False) -> pd.DataFrame:
-        
+    def query_a2(self, name, export=False) -> pd.DataFrame:
+        """Prepares data for query A-2. For futher describtion, refer to documentation.
+
+        Args:
+            name (str): query name
+            export (bool, optional): If True, dataframe will be exported to .csv file. Defaults to False.
+
+        Returns:
+            pd.DataFrame: processed dataframe
+        """
         df_name_list = ['nakazeny_kraj']
         self.__load_dfs(df_name_list)
        
         df = self.loaded_dfs['nakazeny_kraj'].copy()
-        df = df[['vek', 'kraj_nuts_kod']].rename({'vek': 'Age', 'kraj_nuts_kod': 'Region'}, axis='columns')
+        df = df.groupby(['kraj_nuts_kod', 'vek']).size().reset_index(name='Count')
+        df = df[['vek', 'kraj_nuts_kod', 'Count']].rename({'vek': 'Age', 'kraj_nuts_kod': 'Region'}, axis='columns')
         df = df[df['Region'] != '0']
 
         if export:
@@ -57,8 +80,16 @@ class QueryParser:
         return df
 
 
-    def query_a2(self, name, export=False) -> pd.DataFrame:
-        
+    def query_a1(self, name, export=False) -> pd.DataFrame:
+        """Prepares data for query A-1. For futher description, refer to documentation.
+
+        Args:
+            name (str): query name
+            export (bool, optional): If True, dataframe will be exported to .csv file. Defaults to False.
+
+        Returns:
+            pd.DataFrame: processed dataframe
+        """
         df_name_list = ['hospitalizovany', 'statistika_celkovo']
         self.__load_dfs(df_name_list)
 
@@ -87,7 +118,15 @@ class QueryParser:
 
 
     def query_b(self, name, export=False) -> List: 
-        
+        """Prepares data for query B. For futher description, refer to documentation.
+
+        Args:
+            name (str): query name
+            export (bool, optional): If True, dataframe will be exported to .csv file. Defaults to False.
+
+        Returns:
+            List: list of processed dataframe
+        """
         df_name_list = ['obyvatelia', 'nakazeny_kraj']
         self.__load_dfs(df_name_list)
 
@@ -122,7 +161,16 @@ class QueryParser:
 
 
     def query_custom1(self, name, months=12, export=False) -> List:
+        """Prepares data for custom query. For futher description, refer to documentation.
 
+        Args:
+            name (str): query name
+            months (int, optional): For how many months data should be processed. Defaults to 12.
+            export (bool, optional): [description]. Defaults to False.
+
+        Returns:
+            List: list of processed dataframe
+        """
         df_name_list = ['hospitalizovani_ockovanie', 'zemreli_ockovanie', 'jip_ockovanie',
                         'ockovanie_kraj', 'obyvatelia']
         self.__load_dfs(df_name_list)
@@ -188,7 +236,15 @@ class QueryParser:
 
 
     def query_custom2(self, name, export=False) -> pd.DataFrame:
-        
+        """Prepares data for custom query 2. For futher description, refer to documentation.
+
+        Args:
+            name (str): query name
+            export (bool, optional): If True, dataframe will be exported to .csv file. Defaults to False.
+
+        Returns:
+            pd.DataFrame: processed dataframe
+        """
         df_name_list = ['hospitalizovany', 'statistika_celkovo']
         self.__load_dfs(df_name_list)
         
@@ -323,6 +379,7 @@ class QueryParser:
             self.__export_to_csv(df, f"{name}")
         
         return df
+
 
 if __name__ == "__main__":
     

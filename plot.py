@@ -19,11 +19,22 @@ def parse_args():
 class QueryPlotter:
 
     def __init__(self, dataset) -> None:
+        """Plots the preprocessed data accordingly to information provided in assignment.
+
+        Args:
+            dataset (Dataset): 
+        """
         self.parser = QueryParser(dataset)
         sns.set(style="whitegrid")
     
 
     def __export_to_png(self, fig, name):
+        """Exports plot to .png file.
+
+        Args:
+            fig (matplotlib.Figure):
+            name (str): query name
+        """
         fig.tight_layout()
         plt_name = f"plts/{name}.png"
         fig.savefig(plt_name)
@@ -31,6 +42,15 @@ class QueryPlotter:
 
 
     def __load_csv(self, name):
+        """Loads the .csv file into dataframe. If there is no .csv file present, 
+           attempts to create it via QueryParser
+
+        Args:
+            name (str): query_name
+
+        Returns:
+            list: list of the loaded dataframes
+        """
         csv_list = [item for item in os.listdir('data') if name in item]
         df_list = []
 
@@ -44,11 +64,17 @@ class QueryPlotter:
         return df_list
 
 
-    def query_a1(self, name):
-        
+    def query_a2(self, name):
+        """Plots the graph from data prepared by QueryParser. For detailed description of the graph itself
+        please refer to documentation.
+
+        Args:
+            name (str): query name
+        """
         fig, ax = plt.subplots(figsize=(20, 10))
 
         df = self.__load_csv(name)[0]
+        df = df.loc[df.index.repeat(df.Count)]
         sns.boxplot(data=df, x='Region', y='Age', ax=ax)
         
         ax.tick_params(axis='x', rotation=45)  
@@ -57,8 +83,13 @@ class QueryPlotter:
         self.__export_to_png(fig, name)
 
 
-    def query_a2(self, name):
-        
+    def query_a1(self, name):
+        """Plots the graph from data prepared by QueryParser. For detailed description of the graph itself
+        please refer to documentation.
+
+        Args:
+            name (str): query name
+        """        
         fig, ax = plt.subplots(figsize=(20, 10))
 
         df = self.__load_csv(name)[0]
@@ -73,7 +104,13 @@ class QueryPlotter:
 
 
     def query_b(self, name, quarter=1):
-        
+        """Plots the graph from data prepared by QueryParser. For detailed description of the graph itself
+        please refer to documentation.
+
+        Args:
+            name (str): query name
+            quarter (int, optional): determines which quarter of the 4 processed will be plotted
+        """
         fig, ax = plt.subplots(figsize=(20, 10))
 
         df = self.__load_csv(name)[quarter]
@@ -101,7 +138,12 @@ class QueryPlotter:
 
 
     def query_custom1(self, name):
-        
+        """Plots the graph from data prepared by QueryParser. For detailed description of the graph itself
+        please refer to documentation.
+
+        Args:
+            name (str): query name
+        """
         fig, ax = plt.subplots(figsize=(20, 10))
 
         dfs = self.__load_csv(name)
@@ -123,7 +165,12 @@ class QueryPlotter:
 
 
     def query_custom2(self, name):
-        
+        """Plots the graph from data prepared by QueryParser. For detailed description of the graph itself
+        please refer to documentation.
+
+        Args:
+            name (str): query name
+        """
         fig, ax = plt.subplots(figsize=(20, 10))
 
         df = self.__load_csv(name)[0]
