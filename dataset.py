@@ -180,6 +180,7 @@ class Dataset:
         Args:
             data (pd.DataFrame): dataframe containing data
             name (str): name under which collection will be stored in db
+            table : pymongo db collection
         """
         
         if not data.empty:
@@ -188,9 +189,21 @@ class Dataset:
 
 class ProcessingThread(threading.Thread):
 
-
     def __init__(self, conn_string, db_name, name, idx, data, schema, 
                  update=False, old_data=None):
+        """Thread used for parallel processing & uploading of collections.
+
+        Args:
+            conn_string (str): connection string for MongoClient
+            db_name (str): Name of the database
+            name (str): Collection name
+            idx (int): Worker index
+            data (pd.Dataframe): Dataframe containing data
+            schema (dict): Dictionary containing collection schema
+            update (bool, optional): Updates the collections instead of replacing them.Defaults to False.
+            old_data ([type], optional): Dataframe containing data from db. Only valid with update=True.
+                                         Defaults to None.
+        """
         threading.Thread.__init__(self)
         self.client = MongoClient(conn_string)
         self.db = self.client[db_name]
