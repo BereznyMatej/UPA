@@ -29,7 +29,7 @@ class Dataset:
                      'CZ080': 'Moravskoslezský kraj'}
 
 
-    def __init__(self, name, workers):
+    def __init__(self, name, workers=1):
         """Sets up the connection between remote db and local client.
 
         Args:

@@ -217,7 +217,84 @@ class QueryParser:
             self.__export_to_csv(df, f"{name}")
         
         return df
+    
+    def query_c(self, name, export=False) -> pd.DataFrame:
+        df_name_list = ['obyvatelia', 'obce']
 
+        self.__load_dfs(df_name_list)
+        
+        df = self.loaded_dfs['obyvatelia'].copy()
+        df2 = self.loaded_dfs['obce'].copy()
+        
+        #df3 = pd.read_csv('ockovanie.csv')
+
+        age_groups = [['0 až 5 (více nebo rovno 0 a méně než 5)',
+                       '5 až 10 (více nebo rovno 5 a méně než 10)',
+                       '10 až 15 (více nebo rovno 10 a méně než 15)'],
+                       ['15 až 20 (více nebo rovno 15 a méně než 20)',
+                       '20 až 25 (více nebo rovno 20 a méně než 25)',
+                       '25 až 30 (více nebo rovno 25 a méně než 30)',
+                       '30 až 35 (více nebo rovno 30 a méně než 35)',
+                       '35 až 40 (více nebo rovno 35 a méně než 40)',
+                       '40 až 45 (více nebo rovno 40 a méně než 45)',
+                       '45 až 50 (více nebo rovno 45 a méně než 50)',
+                       '50 až 55 (více nebo rovno 50 a méně než 55)',],
+                       ['55 až 60 (více nebo rovno 55 a méně než 60)',
+                       '60 až 65 (více nebo rovno 60 a méně než 65)',
+                       '65 až 70 (více nebo rovno 65 a méně než 70)',
+                       '70 až 75 (více nebo rovno 70 a méně než 75)',
+                       '75 až 80 (více nebo rovno 75 a méně než 80)',
+                       '80 až 85 (více nebo rovno 80 a méně než 85)',
+                       '85 až 90 (více nebo rovno 85 a méně než 90)',
+                       '90 až 95 (více nebo rovno 90 a méně než 95)',
+                       'Od 95 (více nebo rovno 95)']]
+
+        age_categories = ['0-15', '15-55', '55+']
+
+        latest_date = pd.to_datetime(df['casref_do']).max()
+
+        df = df.drop(df[df.casref_do != latest_date].index)
+
+        df = df.drop(df[df.vek_txt == '0'].index)
+        df = df.drop(df[df.pohlavi_txt != '0'].index)
+        df = df.drop(df[df.vuzemi_cis == '97'].index)
+        df = df.drop(df[df.vuzemi_cis == '100'].index)
+
+        age_mapped = (pd.DataFrame({'vek_skupina': age_categories, 'vek_txt': age_groups})
+                                                                    .explode('vek_txt')
+                                                                    .reset_index(drop=True))
+
+        df = df.merge(age_mapped, on='vek_txt', how='left').fillna("Other")
+
+        df = df.drop(columns=['pohlavi_kod',
+                              'pohlavi_cis',
+                              'pohlavi_txt',
+                              'vek_cis',
+                              'vek_kod',
+                              'casref_do',
+                              'stapro_kod',
+                              'vuzemi_cis',
+                              'vuzemi_kod'])
+
+        df = df.groupby(['vuzemi_txt', 'vek_skupina']).sum().reset_index()
+        df = df.pivot_table(index='vuzemi_txt', columns='vek_skupina', values='hodnota')
+
+        df2 = df2[['datum','okres_nazev']]
+
+        df2['datum'] = pd.to_datetime(df2['datum'])
+
+        df2 = df2[(df2['datum'] >= pd.Timestamp(year=2020, month=12, day=16, hour=12))]
+
+        df2 = df2.groupby(['okres_nazev']).count()
+
+        df2 = df2.iloc[1:]
+
+        df['infikovani'] = df2['datum']
+
+        if export:
+            self.__export_to_csv(df, f"{name}")
+        
+        return df
 
 if __name__ == "__main__":
     
