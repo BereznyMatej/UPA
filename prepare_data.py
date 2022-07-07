@@ -371,7 +371,7 @@ class QueryParser:
 
         df = pd.concat([df, df3], axis='columns')
 
-        df_unnormalized = df
+        df_unnormalized = df.copy()
         df_unnormalized = df_unnormalized.iloc[:50]
 
         df['Vaccination_percentage'] = (df['Vaccinated']/((df['Age [0-15]'] + df['Age [15-55]'] + df['Age [55+]']) / 100))

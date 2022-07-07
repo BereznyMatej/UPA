@@ -36,7 +36,7 @@ class Dataset:
             name (str): mongo database name
         """
         self.name = name
-        self.connection_string = "mongodb://ubuntu:klat8klat@ec2-13-40-24-161.eu-west-2.compute.amazonaws.com:27017/{}?authSource=admin".format(self.name)
+        self.connection_string = ""
         self.workers = workers
         self.client = MongoClient(self.connection_string)
         self.db = self.client[self.name]
